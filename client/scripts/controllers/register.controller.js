@@ -33,6 +33,7 @@ function RegisterCtrl($scope, $reactive, $state, $stateParams, $ionicLoading, $i
         topic: this.topic,
         goal: this.goal,
         intro: this.intro,
+        score: 0.1,
       }, 
       (err) => {
         if (err) {

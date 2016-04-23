@@ -10,12 +10,11 @@ function LoginCtrl($scope, $reactive, $state, $ionicLoading, $ionicPopup, $log) 
   this.gotoChat = gotoChat;
  
   function login() {
-    Meteor.loginWithPassword({email: this.email}, this.password, (err) => {
+    Meteor.loginWithPassword(this.email, this.password, (err) => {
       if (err) {
         return handleError(err);
       }
-      $state.go('tab.chat');
-      Meteor.call('welcomeBack');
+      $state.go('chat');
     });
   }
 

@@ -6,17 +6,25 @@ function config($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('chat', {
       url: '/chat',
-      params: {post: null, other: null},
       templateUrl: 'client/templates/chat.html',
       resolve: {
         messages() {
           return Meteor.subscribe('allMessages');
+        },
+        users() {
+          return Meteor.subscribe('users');
         },
         text() {
           return Meteor.subscribe('text');
         }
       },
       controller: 'ChatCtrl as chat'
+    })
+    .state('room', {
+      url: '/room',
+      params: {id: null, user_id: null},
+      templateUrl: 'client/templates/room.html',
+      controller: 'RoomCtrl as room'
     })
     .state('login', {
       url: '/login',

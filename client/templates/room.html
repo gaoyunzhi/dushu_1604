@@ -1,0 +1,57 @@
+<ion-view view-title="谈笑有鸿儒">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear"><img class="header-picture" ng-src="{{  }}"></button>
+  </ion-nav-buttons>
+  <ion-content class="chat" delegate-handle="chatScroll" overflow-scroll="true">
+    <div class="message-list">
+      <div ng-repeat="message in messages" ng-init="text=getText(message); author=getAuthor(text);" class="message-wrapper">
+        <div ng-if="message.text || text">
+          <div class="message" ng-class="getMessageClass(message)">
+            <div class="message-profile">
+              <div ng-if="author">
+                {{author.name.slice(0,2)}}
+              </div>
+            </div>
+            <div class="selectable text-wrapper">
+              <div class="message-timestamp">
+                <span ng-if="author">{{author.name}} ({{author.wechat_id}})</span> {{message.timestamp | calendar}}
+              </div>
+              <div class="text">
+                <pre>{{message.text || text.text}}</pre>
+              </div> 
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </ion-content>
+  <div ng-if="$root.currentUser._id">
+    <ion-footer-bar keyboard-attach class="bar-stable footer-chat item-input-inset">
+      <label class="item-input-wrapper">
+        <textarea
+                ng-keyup="autoExpand($event)"
+                ng-model="chat.message"
+                dir="auto"
+                type="text"
+                on-return="chat.sendMessage(); chat.closeKeyboard()"
+                on-focus="chat.inputUp()"
+                on-blur="chat.inputDown()"
+                class="input">
+        </textarea>        
+      </label>
+
+      <span ng-if="chat.message.length > 0">
+        <button ng-click="chat.sendMessage()" class="button button-clear button-positive">发表</button>
+      </span>
+    </ion-footer-bar>
+  </div>
+  <div ng-if="!$root.currentUser._id">
+    <ion-footer-bar class="button-foot-bar">
+      <div class="chat-buttons">
+        <button class="button button-calm chat-sign-button" ng-click="gotoLogin()">登陆参与讨论</button>
+        <button class="button button-calm chat-register-button" ng-click="gotoRegister()">注册参与讨论</button>
+      </div>
+    </ion-footer-bar>   
+  </div>  
+  
+</ion-view>

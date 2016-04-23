@@ -27,6 +27,14 @@ Meteor.publishComposite('allMessages', function (num_message) {
   };
 });
 
+Meteor.publish('users', function () {
+  console.log(Meteor.users.find({}, {fields: {_id: 1, username: 1, topic: 1, goal:1, intro:1, score: 1, status:1}}).fetch());
+  Meteor.users.find({},
+    // {fields: {_id: 1, username: 1, topic: 1, goal:1, intro:1, score: 1, status:1}}
+    {fields: {status: 1}}
+  )
+})
+
 Meteor.publish('admin_id', function () {
   return AdminID.find();  
 });
