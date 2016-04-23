@@ -41,6 +41,9 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       if (user._id in covered_user) {
         return;
       }
+      if (Meteor.user() && user._id == Meteor.user()._id) {
+        return;
+      }
       var layer = getLayerForUser(user);
       chats.push({
         title: user.username, 
@@ -66,14 +69,14 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return;
     }
     room.users.forEach(userId => {
-      if (userId != Meteor.user()._id) {
+      if (Meteor.user() && userId != Meteor.user()._id) {
         return userId;
       }
     })
   }
 
   getLayerForRoom = function(room) {
-    if (Meteor.user()._id in room.users &&
+    if (Meteor.user() && Meteor.user()._id in room.users &&
       Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
       user = Meteor.users.find({_id: room.lastUpdatedUser});
       if (user && user.score > 0) {

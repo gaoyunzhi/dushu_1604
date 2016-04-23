@@ -6,6 +6,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $reactive(this).attach($scope);
   $scope.room = {};
   $scope.message = [];
+  console.log(Meteor.user());
   if (!Meteor.user()) {
     return;
   }
