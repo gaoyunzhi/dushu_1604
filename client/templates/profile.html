@@ -1,0 +1,26 @@
+<ion-view title="个人信息">
+
+  <ion-content class="profile">
+    <div class="padding text-center">
+      <button ng-click="profile.logout()" class="button button-clear button-assertive">登出</button>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">用户名</div>
+      <div class="item item-body">
+        <div>
+          {{currentUser.profile.name}}
+        </div>
+      </div>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">微信号</div>
+      <div class="item item-body">
+        <div>
+          {{currentUser.profile.wechat_id}}
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

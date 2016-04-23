@@ -1,0 +1,24 @@
+<ion-view view-title="注册" name="login-view">
+  <ion-content class="padding">
+      <div class="list list-inset">
+          <label class="item item-input">
+              <input type="text" placeholder="邮箱（登陆用，不公开）" ng-model="register.email">
+          </label>
+          <label class="item item-input">
+              <input type="password" placeholder="密码" ng-model="register.password">
+          </label>
+          <label class="item item-input">
+              <input type="password" placeholder="请重复一遍密码" ng-model="register.password_retype">
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="用户名" ng-model="register.name">
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="微信号" ng-model="register.wechat_id">
+          </label>
+      </div>
+      <button class="button button-block button-calm" ng-click="register.register()">注册</button>
+      <button class="button button-block button-calm" ng-click="register.gotoLogin()">我有账号，要登录</button>
+      <button class="button button-block button-calm" ng-click="register.gotoChat()">先看看别人的对话</button>
+  </ion-content>
+</ion-view>
