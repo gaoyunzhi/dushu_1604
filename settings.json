@@ -2,9 +2,5 @@
   "admin": {
     "email": "dushufenxiang@gmail.com",
     "password": "aa"
-  },
-  "crawler": {
-    "email": "gaoxia4@gmail.com",
-    "password": "aa"
   }
 }
