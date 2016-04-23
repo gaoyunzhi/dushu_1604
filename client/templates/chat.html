@@ -11,10 +11,12 @@
             {{chat.title.slice(0,2)}}
           </div>
         </div>
-        <div class="chat-title"><h2>{{chat.title}}</h2></div>
-        <p>{{chat.subtitle}}</p>
-        <div ng-if="chat.timestamp">
-          <span class="last-message-timestamp">{{chat.timestamp | calendar}}</span>
+        <div class="chat-right">
+          <h2>{{chat.title}}</h2>
+          <p>{{chat.subtitle}}</p>
+          <div ng-if="chat.timestamp">
+            <span class="last-message-timestamp">{{chat.timestamp | calendar}}</span>
+          </div>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
