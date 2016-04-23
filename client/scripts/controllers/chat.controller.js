@@ -3,7 +3,7 @@ angular
   .controller('ChatCtrl', ChatCtrl);
  
 function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
-  5_MIN_MILLS = 5 * 60 * 1000;
+  FIVE_MIN_MILLS = 5 * 60 * 1000;
 
   $reactive(this).attach($scope);
   $scope.raw_rooms = [];
@@ -24,30 +24,78 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     var chats = [];
     var covered_user = new Set();
     $scope.raw_rooms.forEach(room => {
-      var layer = getLayer(room);
+      var layer = getLayerForRoom(room, covered_user);
+      var otherUserId = getTheOther(room);
+      if (otherUserId) {
+        covered_user.add(otherUserId);
+      }
       chats.push({
         title: room.title, 
         subtitle: room.lastMessage,
-        sortKey: [layer, -room.lastUpdated]
+        timestamp: room.lastUpdated,
+        sortKey: layer,
+        href: "#/room?id=" + room._id
       })
     })
-    console.log($scope.chats, $scope.raw_users, $scope.raw_rooms);
+    $scope.raw_users.forEach(user => {
+      if (user._id in covered_user) {
+        return;
+      }
+      var layer = getLayerForUser(user);
+      chats.push({
+        title: user.username, 
+        subtitle: user.intro,
+        sortKey: layer,
+        href: "#/room?user_id=" + user._id
+      })
+    })
+    chats.sort((c1, c2) => {
+      if (c1.sortKey < c2.sortKey) {
+        return -1;
+      }
+      if (c1.sortKey > c2.sortKey) {
+        return 1;
+      }
+      return 0;
+    });
+    $scope.chats = chats;
   };
 
-  getLayer = function(room) {
-    if (Meteor.user()._id in room.users &&
-      Date.now() - room.lastUpdated < 5_MIN_MILLS) {
-      return [1, -room.lastUpdated];
+  getTheOther = function(room) {
+    if (!room.users.size == 2) {
+      return;
     }
-    if (Date.now() - room.lastUpdated < 5_MIN_MILLS) {
+    room.users.forEach(userId => {
+      if (userId != Meteor.user()._id) {
+        return userId;
+      }
+    })
+  }
+
+  getLayerForRoom = function(room) {
+    if (Meteor.user()._id in room.users &&
+      Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
+      user = Meteor.users.find({_id: room.lastUpdatedUser});
+      if (user && user.score > 0) {
+        return [1, -room.lastUpdated];
+      }
+    }
+    if (Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
       var allPositiveRating = room.users.every(userId => {
-        user = Meteor.users.find({_id, userId});
-        return user.score > 0;
+        user = Meteor.users.find({_id: userId});
+        return user && user.score > 0;
       });
       if (allPositiveRating) {
         return [2, -room.lastUpdated];
       }
     }
     return [4, 0]; // we can always inprove later
+  }
+
+  getLayerForUser = function(user) {
+    if (user.status.online && user.score > 0) {
+      return [3, -user.score];
+    }
+    return [4, 0];
   }
 }

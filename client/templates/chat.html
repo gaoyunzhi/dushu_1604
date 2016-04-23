@@ -1,23 +1,23 @@
 <ion-view view-title="谈笑有鸿儒">
   <ion-content>
     <ion-list>
-<!--       <ion-item
-              ng-repeat="chat in chats.data | orderBy:'-lastMessage.timestamp'"
+      <ion-item
+              ng-repeat="chat in chats"
               class="item-chat item-remove-animate item-avatar item-icon-right"
               type="item-text-wrap"
-              href="#/tab/chats/{{chat._id}}">
-        <img ng-src="{{chat | chatPicture}}">
-        <h2>{{chat | chatName}}</h2>
-        <ng-switch on="chat.lastMessage.type">
-          <p ng-switch-when="text">{{chat.lastMessage.text}}</p>
-          <p ng-switch-when="picture">image</p>
-        </ng-switch>
-        <span class="last-message-timestamp">{{chat.lastMessage.timestamp | calendar}}</span>
+              href="{{chat.href}}">
+        <div class="chat-profile">
+          <div ng-if="chat.title">
+            {{chat.title.slice(0,2)}}
+          </div>
+        </div>
+        <div class="chat-title"><h2>{{chat.title}}</h2></div>
+        <p>{{chat.subtitle}}</p>
+        <div ng-if="chat.timestamp">
+          <span class="last-message-timestamp">{{chat.timestamp | calendar}}</span>
+        </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
-        <ion-option-button class="button-assertive" ng-click="chats.remove(chat)">
-          Delete
-        </ion-option-button>
-      </ion-item> -->
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-view>
