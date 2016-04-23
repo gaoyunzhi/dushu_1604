@@ -6,11 +6,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $reactive(this).attach($scope);
   $scope.room = {};
   $scope.message = [];
-  console.log(Meteor.user());
-  if (!Meteor.user()) {
-    return;
-  }
-  $scope.rightUserId = Meteor.user()._id;
+  $scope.rightUserId = this.userId;
   if (!_.isEmpty($location.search().user_id)) {
     Meteor.call('createRoom', $location.search().user_id);
   }
@@ -22,13 +18,14 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   });
 
   findRoom = function() {
-    if ($location.search().user_id) {
-      var users = [$location.search().user_id, Meteor.user()._id].sort();
+    if ($location.search().user_id && this.userId) {
+      var users = [$location.search().user_id, this.userId].sort();
       $scope.room = Rooms.find({users});
     }
     if ($location.search().id) {
       $scope.room = Rooms.find({_id: $location.search().id});
     }
+    console.log($scope.room);
   }
 
   update = function() {
@@ -39,7 +36,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return;
     }
     $scope.room = Rooms.find({_id: $scope.room.id}); // update room
-    if (!Meteor.user()._id in $scope.room.users) {
+    if (!(this.userId in $scope.room.users)) {
       $scope.rightUserId = $scope.room.users[0];
     }
     var messages = Messages.find({room: $scope.room._id});
