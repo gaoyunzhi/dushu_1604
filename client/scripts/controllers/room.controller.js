@@ -4,44 +4,12 @@ angular
  
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
-  Meteor.subscribe('text');
-  Meteor.subscribe('admin_id');
-  Tracker.autorun(function() {
-    Meteor.subscribe('allMessages', Session.get('numMessages'));
-  });
-  if (!_.isEmpty($location.search().post)) {
-    Meteor.call('newMessage', $location.search().post);
+  $scope.roomId = $location.search().id;
+  if (!_.isEmpty($location.search().user_id)) {
+    Meteor.call('createRoom', $location.search().user_id);
   }
-  var admin_id = 0;
-  $scope.$meteorSubscribe('admin_id').then(function() {
-    admin_id = AdminID.findOne().admin_id;
-  });
-  $scope.$meteorSubscribe('allMessages').then(function() {
-      $scope.raw_messages = $scope.$meteorCollection(Messages);
-    
-      $scope.getText = function(message) {
-        return Text.findOne(message.text_id);
-      };
-
-      $scope.getAuthor = function(text) {
-        if (!text) {
-          return;
-        }
-        var user = Meteor.users.findOne(text.user_id);
-        return {name: user.profile.name, weroom_id: user.profile.weroom_id};
-      };
-  });
-
-  $scope.findText = function(message) {
-    if (message.text) {
-      return message.text;
-    }
-    var text = Text.findOne(message.text_id);
-    if (!text) {
-      return '';
-    }
-    return text.text;
-  }
+  
+  
 
   $scope.getMessageClass = function(message) {
     if (message.type === 'send' && 

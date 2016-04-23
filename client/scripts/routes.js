@@ -8,14 +8,11 @@ function config($stateProvider, $urlRouterProvider) {
       url: '/chat',
       templateUrl: 'client/templates/chat.html',
       resolve: {
-        messages() {
-          return Meteor.subscribe('allMessages');
-        },
         users() {
           return Meteor.subscribe('users');
         },
-        text() {
-          return Meteor.subscribe('text');
+        rooms() {
+          return Meteor.subscribe('rooms');
         }
       },
       controller: 'ChatCtrl as chat'
@@ -24,7 +21,18 @@ function config($stateProvider, $urlRouterProvider) {
       url: '/room',
       params: {id: null, user_id: null},
       templateUrl: 'client/templates/room.html',
-      controller: 'RoomCtrl as room'
+      controller: 'RoomCtrl as room',
+      resolve: {
+        users() {
+          return Meteor.subscribe('users');
+        },
+        rooms() {
+          return Meteor.subscribe('rooms');
+        },
+        messages() {
+          return Meteor.subscribe('messages');
+        }
+      },
     })
     .state('login', {
       url: '/login',
