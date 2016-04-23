@@ -52,6 +52,6 @@ function RegisterCtrl($scope, $reactive, $state, $stateParams, $ionicLoading, $i
   }
 
   function gotoChat() {
-    $state.go('tab.chat')
+    $state.go('chat')
   }
 }

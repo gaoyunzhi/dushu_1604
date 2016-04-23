@@ -4,20 +4,10 @@ angular
  
 function config($stateProvider, $urlRouterProvider) {
   $stateProvider
-    .state('tab', {
-      url: '/tab',
-      abstract: true,
-      templateUrl: 'client/templates/tabs.html'
-    })
-    .state('tab.chat', {
+    .state('chat', {
       url: '/chat',
       params: {post: null, other: null},
-      views: {
-        'tab-chat': {
-          templateUrl: 'client/templates/chat.html',
-          controller: 'ChatCtrl as chat'
-        }
-      }, 
+      templateUrl: 'client/templates/chat.html',
       resolve: {
         messages() {
           return Meteor.subscribe('allMessages');
@@ -25,43 +15,13 @@ function config($stateProvider, $urlRouterProvider) {
         text() {
           return Meteor.subscribe('text');
         }
-      }
-    })
-    .state('tab.profile', {
-      url: '/profile',
-      views: {
-        'tab-profile': {
-          templateUrl: 'client/templates/profile.html',
-          controller: 'ProfileCtrl as profile',
-        }
       },
-      resolve: {
-        user() {
-          if (!Meteor.user()) {
-            throw 'AUTH_REQUIRED';
-          }
-          return Meteor.user();
-        },
-      }
+      controller: 'ChatCtrl as chat'
     })
     .state('login', {
       url: '/login',
       templateUrl: 'client/templates/login.html',
       controller: 'LoginCtrl as logger'
-    })
-    .state('admin_view', {
-      url: '/adminview',
-      templateUrl: 'client/templates/admin_view.html',
-      controller: 'AdminViewCtrl as adminView',
-      resolve: {
-        user() {
-          if (Meteor.isClient) return;
-          if (!Meteor.user() || Meteor.user().username !== Meteor.settings.admin.email) {
-            throw 'AUTH_REQUIRED';
-          }
-          return Meteor.user();
-        },
-      }
     })
     .state('register', {
       url: '/register',
@@ -70,5 +30,5 @@ function config($stateProvider, $urlRouterProvider) {
       controller: 'RegisterCtrl as register'
     });
  
-  $urlRouterProvider.otherwise('tab/chat');
+  $urlRouterProvider.otherwise('chat');
 }

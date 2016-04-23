@@ -11,10 +11,16 @@
               <input type="password" placeholder="请重复一遍密码" ng-model="register.password_retype">
           </label>
           <label class="item item-input">
-              <input type="text" placeholder="用户名" ng-model="register.name">
+              <input type="text" placeholder="用户名(建议两字)" ng-model="register.name">
           </label>
           <label class="item item-input">
-              <input type="text" placeholder="微信号" ng-model="register.wechat_id">
+              <input type="text" placeholder="喜欢聊什么呀？（比如文学，电影，旅行，职场，心理）" ng-model="register.topic">
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="聊天的目的是？（比如找对象，交朋友，充实自我，学习，排遣无聊）" ng-model="register.topic">
+          </label>
+          <label class="item item-input">
+              <input type="text" placeholder="介绍一下你自己？（职业，专业，出生地，现在地，一件关于自己的趣事）" ng-model="register.topic">
           </label>
       </div>
       <button class="button button-block button-calm" ng-click="register.register()">注册</button>
