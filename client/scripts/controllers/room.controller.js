@@ -34,7 +34,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     if (!$scope.room || !$scope.room.id) {
       return;
     }
-    $scope.room = Rooms.find({$scope.room.id}}; // update room
+    $scope.room = Rooms.find({_id: $scope.room.id}); // update room
     if (!Meteor.user()._id in $scope.room.users) {
       $scope.rightUserId = $scope.room.users[0];
     }
