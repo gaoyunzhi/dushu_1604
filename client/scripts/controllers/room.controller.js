@@ -4,23 +4,50 @@ angular
  
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
-  $scope.roomId = $location.search().id;
+  $scope.room = {};
+  $scope.message = [];
+  $scope.rightUserId = Meteor.user()._id;
   if (!_.isEmpty($location.search().user_id)) {
     Meteor.call('createRoom', $location.search().user_id);
   }
-  
-  
+  $scope.$meteorSubscribe('rooms').then(function() {
+    update();
+  });
+  $scope.$meteorSubscribe('messages').then(function() {
+    update();
+  });
+
+  findRoom = function() {
+    if ($location.search().user_id) {
+      var users = [$location.search().user_id, Meteor.user()._id].sort();
+      $scope.room = Rooms.find({users});
+    }
+    if ($location.search().id) {
+      $scope.room = Rooms.find({_id: $location.search().id});
+    }
+  }
+
+  update = function() {
+    if (!$scope.room || !$scope.room.id) {
+      findRoom();
+    }
+    if (!$scope.room || !$scope.room.id) {
+      return;
+    }
+    $scope.room = Rooms.find({$scope.room.id}}; // update room
+    if (!Meteor.user()._id in $scope.room.users) {
+      $scope.rightUserId = $scope.room.users[0];
+    }
+    var messages = Messages.find({room: $scope.room._id});
+    messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
+    $scope.messages = messages;
+  }
 
   $scope.getMessageClass = function(message) {
-    if (message.type === 'send' && 
-      (!Meteor.user() || message.user_id === Meteor.user()._id)) {
-      return 'message-mine';
+    if (message.author == $scope.rightUserId) {
+      return 'message-right';
     }
-    if (Meteor.user() && (message.user_id === Meteor.user()._id || 
-      $scope.findText(message).indexOf(Meteor.user().profile.name) !== -1)) {
-      return 'message-other message-to-me';
-    }
-    return 'message-other';
+    return 'message-left';
   }
 
   let isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
@@ -31,45 +58,12 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   this.loadMore = loadMore;
 
   function sendMessage() {
-    if (_.isEmpty(this.message)) return;
+    if (_.isEmpty(this.message) || $scope.room._id) return;
  
-    Meteor.call('newMessage', this.message);
+    Meteor.call('newMessage', this.message, $scope.room._id);
  
     delete this.message;
   }
-
-  $scope.$watchCollection('raw_messages', (newVal, oldVal) => {
-    var val = newVal || oldVal;
-    if (!val) {
-      return;
-    }
-    var messages =  val.slice();
-    messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
-    $scope.messages = messages.filter(message => {
-      if (Meteor.user() && message.user_id ==  Meteor.user()._id) {
-        return true;
-      }
-      var text = Text.findOne({ _id: message.text_id });
-      if (text && text.user_id == admin_id) {
-        return false;
-      }
-      var content = message.text || (text && text.text);
-      if (!content) {
-        return false;
-      }
-      if (Meteor.user() && content.indexOf(Meteor.user().profile.name) !== -1) {
-        return true; // not sure if this will case issue. product decision though.
-      }
-      if (!content) {
-        return false;
-      }
-      if ((content.length > TEXT_MIN_LENGTH) &&
-        (!is_bad_content(content))) {
-        return true;
-      }
-      return false;
-    })
-  });
 
   $scope.$watchCollection('messages', (newVal, oldVal) => {
     if (oldVal && newVal && oldVal.length && newVal.length) {
@@ -114,20 +108,12 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
  
   function closeKeyboard () {
-    // cordova.plugins.Keyboard.close();
-  }
-
-  function loadMore() {
-    var num_messages = Session.get('numMessages');
-    if (!num_messages) {num_messages = 100;}
-    num_messages += 100; // to lazy to add constant.
-    Session.set('numMessages', num_messages);
+    cordova.plugins.Keyboard.close();
   }
 
   $scope.gotoLogin = function() {
     $state.go('login');
   }
-
 
   $scope.gotoRegister = function() {
     $state.go('register');

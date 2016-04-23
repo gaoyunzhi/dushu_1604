@@ -61,7 +61,7 @@
     word-wrap: break-word;
   }
 
-  &.message-mine {
+  &.message-right {
     float: right;
     background-color: #DCF8C6;
     .message-profile {
@@ -69,7 +69,7 @@
     }
   }
 
-  &.message-other {
+  &.message-left {
     float: left;
     background-color: #FFF;
     .message-profile {
@@ -80,18 +80,7 @@
     }
   }
 
-  &.message-to-me {
-    float: left;
-    background-color: #BFEFFF;
-    .message-profile {
-      float: left;
-    }
-    .message-timestamp {
-      margin-left: 48px;
-    }
-  }
-
-  &.message-other::before, &.message-mine::before, {
+  &.message-right::before {
     content: "";
     position: absolute;
     bottom: 3px;
@@ -102,14 +91,9 @@
     background-size: contain;
   }
 
-  &.message-other::before {
+  &.message-left::before {
     left: -11px;
     background-image: url(/message-other.png)
-  }
-
-  &.message-mine::before {
-    right: -11px;
-    background-image: url(/message-mine.png)
   }
 
   .text {
