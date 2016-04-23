@@ -1,23 +1,20 @@
-<ion-view view-title="谈笑有鸿儒">
-  <ion-nav-buttons side="right">
-    <button class="button button-clear"><img class="header-picture" ng-src="{{  }}"></button>
-  </ion-nav-buttons>
+<ion-view view-title="room.title">
   <ion-content class="chat" delegate-handle="chatScroll" overflow-scroll="true">
     <div class="message-list">
-      <div ng-repeat="message in messages" ng-init="text=getText(message); author=getAuthor(text);" class="message-wrapper">
-        <div ng-if="message.text || text">
+      <div ng-repeat="message in messages" ng-init="author=getAuthor(message);" class="message-wrapper">
+        <div ng-if="message.text">
           <div class="message" ng-class="getMessageClass(message)">
             <div class="message-profile">
               <div ng-if="author">
-                {{author.name.slice(0,2)}}
+                {{author.username.slice(0,2)}}
               </div>
             </div>
             <div class="selectable text-wrapper">
               <div class="message-timestamp">
-                <span ng-if="author">{{author.name}} ({{author.wechat_id}})</span> {{message.timestamp | calendar}}
+                <span ng-if="author">{{author.username}}</span> {{message.timestamp | calendar}}
               </div>
               <div class="text">
-                <pre>{{message.text || text.text}}</pre>
+                <pre>{{message.text}}</pre>
               </div> 
             </div>
           </div>

@@ -6,6 +6,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $reactive(this).attach($scope);
   $scope.room = {};
   $scope.message = [];
+  if (!Meteor.user()) {
+    return;
+  }
   $scope.rightUserId = Meteor.user()._id;
   if (!_.isEmpty($location.search().user_id)) {
     Meteor.call('createRoom', $location.search().user_id);
@@ -52,10 +55,15 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
 
   let isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
   this.sendMessage = sendMessage
+  this.getAuthor = getAuthor
   this.inputUp = inputUp;
   this.inputDown = inputDown;
   this.closeKeyboard = closeKeyboard;
-  this.loadMore = loadMore;
+
+  function getAuthor(message) {
+    var userId = message.author;
+    return User.find({_id: userId});
+  }
 
   function sendMessage() {
     if (_.isEmpty(this.message) || $scope.room._id) return;
