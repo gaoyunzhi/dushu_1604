@@ -14,6 +14,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   Meteor.subscribe('rooms');
   Meteor.subscribe('messages');
   Meteor.subscribe('users');
+  $scope.$meteorSubscribe('users').then(function() {update();});
+  $scope.$meteorSubscribe('messages').then(function() {update();});
+  $scope.$meteorSubscribe('rooms').then(function() {update();});
 
   findRoom = function() {
     if ($location.search().user_id && Meteor.userId()) {
@@ -52,7 +55,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return calculatedMessage;
     });
   }
-
+  
   $scope.getMessageClass = function(message) {
     if (message.author == $scope.rightUserId) {
       return 'message-right';
@@ -138,4 +141,6 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   Tracker.autorun(function() {
     update();
   });
+
+  update();
 }

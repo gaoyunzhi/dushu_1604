@@ -8,7 +8,13 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $reactive(this).attach($scope);
   $scope.chats = [];
 
+  Meteor.subscribe('rooms');
+  Meteor.subscribe('users');
+  $scope.$meteorSubscribe('users').then(function() {updateChats();});
+  $scope.$meteorSubscribe('rooms').then(function() {updateChats();});
+
   updateChats = function() {
+    console.log("updateChats");
     var chats = [];
     var covered_user = new Set();
     Rooms.find({}).fetch().forEach(room => {
@@ -99,4 +105,6 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   Tracker.autorun(function() {
     updateChats();
   });
+
+  updateChats();
 }
