@@ -20,4 +20,12 @@
 
 .chat-profile.title-online {
   background: #4cb2b4;
-}  
+} 
+
+.last-message-timestamp {
+  position: absolute;
+  top: 16px;
+  right: 40px;
+  font-size: 14px;
+  color: #9A9898;
+} 
