@@ -74,9 +74,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
 
   function sendMessage() {
     if (_.isEmpty(this.message) || !$scope.currentRoom._id) return;
- 
+    
     Meteor.call('newMessage', this.message, $scope.currentRoom._id);
- 
+    $scope.rightUserId = Meteor.userId(); // put my message on the right side.
     delete this.message;
   }
 
