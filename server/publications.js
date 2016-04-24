@@ -16,3 +16,8 @@ Meteor.publish('rooms', function () {
 Meteor.publish('admin_id', function () {
   return AdminID.find();  
 });
+
+Meteor.publish('reviews', function () {
+  return Reviews.find({});  
+});
+

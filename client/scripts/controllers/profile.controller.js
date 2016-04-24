@@ -19,11 +19,31 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
     if (!$scope.profile) {
       return;
     }
+    $scope.profile.score = $scope.profile.score.toFixed(2);
     $scope.profile.chatHref = "#/room/0/" + $scope.profile._id;
+    
+    loadMyRatingInfo();
+    loadOthersRatingInfo();
+  };
+
+  loadMyRatingInfo = function() {
+    if (!_.isEmpty($scope.rating)) {
+      return;
+    }
+    var review = Reviews.findOne({reviewer: Meteor.userId(), reviewee: $scope.profile._id});
+    if (!review) {
+      return;
+    }
+    $scope.rating.rate = review.rate;
+    $scope.rating.detail = review.detail;
+  };
+
+  loadOthersRatingInfo = function() {
+    var reviews = Reviews.findOne({reviewee: $scope.profile._id});
+
   };
 
   $scope.rating = {};
-  $scope.rating.rate = 3;
 
   $scope.$watchCollection('rating.detail', (newVal, oldVal) => {
     $scope.needSaveRating = true;
@@ -42,6 +62,10 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   }
 
   function changeRating() {
+    if (_.isEmpty($scope.rating) || !$scope.profile._id) {
+      $scope.needSaveRating = false;
+      return;
+    }
     Meteor.call('changeRating', $scope.profile._id, $scope.rating);
     $scope.needSaveRating = false;
   }

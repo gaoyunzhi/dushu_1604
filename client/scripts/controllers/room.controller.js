@@ -50,6 +50,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       var author = Meteor.users.findOne({_id: userId});
       calculatedMessage.authorName = author && author.username;
       calculatedMessage.authorScore = author && author.score;
+      if (calculatedMessage.authorScore) {
+        calculatedMessage.authorScore = calculatedMessage.authorScore.toFixed(2)
+      }
       calculatedMessage.profileHref = 
         author && "#/profile/" + author._id;
       return calculatedMessage;

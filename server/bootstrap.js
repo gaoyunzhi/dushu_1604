@@ -11,6 +11,44 @@ Meteor.startup(function () {
       score: 10.1
     });
   }
+  if (Accounts.findUserByEmail('1') == undefined) {
+    result = Accounts.createUser({
+        email: '1',
+        password: '1',
+        username: '大猫',
+        topic: '喵喵一家',
+        goal: '猫猫猫！',
+        intro: '大猫',
+        score: 0.1
+      });
+    result = Accounts.createUser({
+        email: '2',
+        password: '2',
+        username: '二猫',
+        topic: '喵喵一家',
+        goal: '猫猫猫！',
+        intro: '二猫',
+        score: 0.1
+      });
+    result = Accounts.createUser({
+        email: '3',
+        password: '3',
+        username: '三猫',
+        topic: '喵喵一家',
+        goal: '猫猫猫！',
+        intro: '三猫',
+        score: 0.1
+      });
+    result = Accounts.createUser({
+        email: '4',
+        password: '4',
+        username: '四猫',
+        topic: '喵喵一家',
+        goal: '猫猫猫！',
+        intro: '四猫',
+        score: 0.1
+      });
+  }  
   ADMIN = Accounts.findUserByEmail(Meteor.settings.admin.email);
   if (AdminID.find().count() == 0) {
     AdminID.insert({admin_id: ADMIN._id});
