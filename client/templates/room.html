@@ -6,7 +6,7 @@
   </ion-nav-buttons>
   <ion-nav-title>
     <span ng-if="$root.currentUser._id != currentRoom.creater">
-      {{currentRoom.title}}
+      {{currentRoom.title}} 
     </span>
     <span ng-if="$root.currentUser._id == currentRoom.creater">
       <input type="text" dir="auto" placeholder="更改房间名" ng-model="data.newTitle" class="title-input" on-return="updateTitle()"
