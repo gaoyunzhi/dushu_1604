@@ -5,7 +5,6 @@ angular
 function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
   this.logout = logout;
-  $scope.myGoBack = myGoBack;
   $scope.profile = {};
 
   Meteor.subscribe('users');
