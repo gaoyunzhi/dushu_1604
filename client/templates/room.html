@@ -1,17 +1,15 @@
 <ion-view view-title={{currentRoom.title}}>
   <ion-content class="room" delegate-handle="roomScroll" overflow-scroll="true">
     <div class="message-list">
-      <div ng-repeat="message in messages" ng-init="author=getAuthor(message);" class="message-wrapper">
+      <div ng-repeat="message in currentMessages" class="message-wrapper">
         <div ng-if="message.text">
           <div class="message" ng-class="getMessageClass(message)">
             <div class="message-profile">
-              <div ng-if="author">
-                {{author.username.slice(0,2)}}
-              </div>
+              {{message.authorName.slice(0,2)}}
             </div>
             <div class="selectable text-wrapper">
               <div class="message-timestamp">
-                <span ng-if="author">{{author.username}}</span> {{message.timestamp | calendar}}
+                {{message.authorName}} {{message.timestamp | calendar}}
               </div>
               <div class="text">
                 <pre>{{message.text}}</pre>

@@ -14,6 +14,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     update();
   });
   $scope.$meteorSubscribe('messages').then(function() {
+    console.log("update messages");
     update();
   });
   $scope.$meteorSubscribe('users').then(function() {
@@ -41,11 +42,16 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     if (!(Meteor.userId() in $scope.currentRoom.users)) {
       $scope.rightUserId = $scope.currentRoom.users[0];
     }
-    console.log("all message", Messages.find({}).fetch());
+    // console.log("all message", Messages.find({}).fetch());
     var messages = Messages.find({room: $scope.currentRoom._id}).fetch();
     messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
-    $scope.messages = messages;
-    console.log("$scope.messages", $scope.messages);
+    $scope.currentMessages = messages.map(message => {
+      var calculatedMessage = _.clone(message);
+      var userId = message.author;
+      var author = Meteor.users.findOne({_id: userId});
+      calculatedMessage.authorName = author && author.username;
+      return calculatedMessage;
+    });
   }
 
   $scope.getMessageClass = function(message) {
@@ -57,15 +63,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
 
   let isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
   this.sendMessage = sendMessage
-  this.getAuthor = getAuthor
   this.inputUp = inputUp;
   this.inputDown = inputDown;
   this.closeKeyboard = closeKeyboard;
-
-  function getAuthor(message) {
-    var userId = message.author;
-    return Meteor.users.findOne({_id: userId});
-  }
 
   function sendMessage() {
     if (_.isEmpty(this.message) || !$scope.currentRoom._id) return;
@@ -118,7 +118,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
  
   function closeKeyboard () {
-    cordova.plugins.Keyboard.close();
+    // cordova.plugins.Keyboard.close();
   }
 
   $scope.gotoLogin = function() {

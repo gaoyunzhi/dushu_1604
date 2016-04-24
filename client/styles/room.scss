@@ -67,6 +67,9 @@
     .message-profile {
       float: right;
     }
+    .message-timestamp, .text {
+      margin-right: 40px;
+    }
   }
 
   &.message-left {
@@ -75,7 +78,7 @@
     .message-profile {
       float: left;
     }
-    .message-timestamp {
+    .message-timestamp, .text {
       margin-left: 40px;
     }
   }
