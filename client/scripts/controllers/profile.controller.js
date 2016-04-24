@@ -4,7 +4,6 @@ angular
  
 function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
-  this.logout = logout;
   $scope.profile = {};
   $scope.needSaveRating = false;
   $scope.changeRating = changeRating;
@@ -86,7 +85,7 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   });
 
 
-  function logout() {
+  $scope.logout = function() {
     Meteor.logout((err) => {
       if (err) return; 
       $state.go('login');

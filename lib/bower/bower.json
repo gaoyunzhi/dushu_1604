@@ -1,8 +1,0 @@
-{
-  "name": "my-app",
-  "version": "0.0.1",
-  "dependencies": {
-    "ionic-rating": "^0.3.0"
-  },
-  "private": true
-}
