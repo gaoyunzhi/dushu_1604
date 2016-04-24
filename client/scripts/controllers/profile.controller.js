@@ -18,13 +18,14 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
 
   update = function() {
     $scope.profile = Meteor.users.findOne({_id: $stateParams.id});
-    if (!$scope.profile) {
+    if (!$scope.profile || _.isEmpty($scope.profile)) {
       return;
     }
-    $scope.profile.score = $scope.profile.score.toFixed(2);
+    $scope.profile.score = $scope.profile.score && 
+      $scope.profile.score.toFixed(2);
     $scope.profile.chatHref = "#/room/0/" + $scope.profile._id;
     if (_.isEmpty($scope.myProfile) &&
-        $scope.profile._id == Meteor.userId()) {
+        $scope.profile._id == Meteor.userId() && $scope.profile.intro) {
       $scope.myProfile.goal = $scope.profile.goal;
       $scope.myProfile.topic = $scope.profile.topic;
       $scope.myProfile.intro = $scope.profile.intro;
@@ -112,7 +113,7 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   };
 
   $scope.updateMyProfile = function() {
-    if (_.empty($scope.myProfile)) {
+    if (_.isEmpty($scope.myProfile)) {
       return;
     }
     Meteor.call('updateMyProfile', $scope.myProfile);
