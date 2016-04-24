@@ -13,12 +13,14 @@
       <div ng-repeat="message in currentMessages" class="message-wrapper">
         <div ng-if="message.text">
           <div class="message" ng-class="getMessageClass(message)">
-            <div class="message-profile">
-              {{message.authorName.slice(0,2)}}
-            </div>
+            <a href={{message.profileHref}}>
+              <div class="message-profile">
+                {{message.authorName.slice(0,2)}}
+              </div>
+            </a>
             <div class="selectable text-wrapper">
               <div class="message-timestamp">
-                {{message.authorName}} {{message.timestamp | calendar}}
+                {{message.authorName}} （积分: {{message.authorScore}}）  {{message.timestamp | calendar}}
               </div>
               <div class="text">
                 <pre>{{message.text}}</pre>
