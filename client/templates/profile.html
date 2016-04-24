@@ -1,4 +1,9 @@
 <ion-view cache-view = "false">
+  <ion-nav-buttons side = "right">
+    <a class="button button-icon button-clear ion-navicon" href="#/chat"> 
+       对话列表 
+    </a>
+  </ion-nav-buttons>
   <ion-nav-title> {{profile.username}} </ion-nav-title>
   <ion-content class="profile">
     <span ng-if="$root.currentUser._id == profile._id">
@@ -10,10 +15,10 @@
     <span ng-if="$root.currentUser._id != profile._id">
 
       <div class="list card">
-        <div class="item item-divider">我对{{profile.username}}的评价</div>
+        <div class="item item-divider">我对{{profile.username}}的评价（点击修改，欢迎完善）</div>
         <div class="item item-body">
           <rating ng-model="rating.rate" max="rating.max" class="rating"></rating>
-          <input type="text" placeholder="在写几句我对{{profile.username}}的评价吧！" ng-model="review.detail">
+          <input type="text" placeholder="再写几句我对{{profile.username}}的评价吧！" class="review" ng-model="review.detail">
         </div>
       </div>
     </span>  

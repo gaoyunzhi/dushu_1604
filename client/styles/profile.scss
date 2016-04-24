@@ -4,6 +4,15 @@
   cursor: pointer;
 }
 
-.rating ul li {
+.rating li {
     float: left;
+    i {
+        font-size: 150%;
+    }    
+}
+
+input.review {
+    width: 100%;
+    padding-top: 10px;
+    font-size: 17px;
 }

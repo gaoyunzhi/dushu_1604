@@ -1,4 +1,9 @@
 <ion-view cache-view = "false">
+  <ion-nav-buttons side = "right">
+    <a class="button button-icon button-clear ion-navicon" href="#/chat"> 
+       对话列表 
+    </a>
+  </ion-nav-buttons>
   <ion-nav-title>
     <span ng-if="$root.currentUser._id != currentRoom.creater">
       {{currentRoom.title}}
