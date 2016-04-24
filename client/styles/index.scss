@@ -1,3 +1,11 @@
 .selectable {
-    -webkit-user-select: auto;
+    -moz-user-select: text;
+     -khtml-user-select: text;
+     -webkit-user-select: text;
+     -ms-user-select: text;
+     user-select: text;
 }
+
+body {
+ -webkit-user-select: auto !important;
+} 

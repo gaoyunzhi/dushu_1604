@@ -8,6 +8,8 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   $scope.profile = {};
   $scope.needSaveRating = false;
   $scope.changeRating = changeRating;
+  $scope.currentReviews = [];
+  $scope.myProfile = {};
 
   Meteor.subscribe('users');
   Meteor.subscribe('reviews');
@@ -21,6 +23,12 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
     }
     $scope.profile.score = $scope.profile.score.toFixed(2);
     $scope.profile.chatHref = "#/room/0/" + $scope.profile._id;
+    if (_.isEmpty($scope.myProfile) &&
+        $scope.profile._id == Meteor.userId()) {
+      $scope.myProfile.goal = $scope.profile.goal;
+      $scope.myProfile.topic = $scope.profile.topic;
+      $scope.myProfile.intro = $scope.profile.intro;
+    }
     
     loadMyRatingInfo();
     loadOthersRatingInfo();
@@ -39,8 +47,31 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   };
 
   loadOthersRatingInfo = function() {
-    var reviews = Reviews.findOne({reviewee: $scope.profile._id});
-
+    var reviews = Reviews.find({reviewee: $scope.profile._id}).fetch();
+    reviews.forEach(review => {
+      var reviewerId = review.reviewer;
+      var reviewer = Meteor.users.findOne({_id: reviewerId});
+      if (!reviewer || reviewerId == Meteor.userId()) {
+        return;
+      }
+      if (reviewer.score < 0 || !review.detail || review.detail.length < 3) {
+        review.sortKey = [3, 0];
+      } else {
+        review.sortKey = [1, - reviewer.score * review.detail.length];
+      }
+      review.reviewerName = reviewer.username;
+    })
+    reviews = reviews.filter(review => review.sortKey);
+    reviews.sort((r1, r2) => {
+      if (r1.sortKey < r2.sortKey) {
+        return -1;
+      }
+      if (r1.sortKey > r2.sortKey) {
+        return 1;
+      }
+      return 0;
+    });
+    $scope.currentReviews = reviews;
   };
 
   $scope.rating = {};
@@ -79,6 +110,13 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
         element.style.height = scrollHeight + "px"; 
       }   
   };
+
+  $scope.updateMyProfile = function() {
+    if (_.empty($scope.myProfile)) {
+      return;
+    }
+    Meteor.call('updateMyProfile', $scope.myProfile);
+  }
 
   Tracker.autorun(function() {
     update();

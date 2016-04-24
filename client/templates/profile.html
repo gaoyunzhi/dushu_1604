@@ -10,7 +10,7 @@
       <a class="icon ion-chatboxes" href={{profile.chatHref}}></a>
     </span>
   </ion-nav-title>
-  <ion-content class="profile">
+  <ion-content class="selectable" overflow-scroll="true">
     <span ng-if="$root.currentUser._id == profile._id">
       <div class="padding text-center">
         <button ng-click="profile.logout()" class="button button-clear button-assertive">登出</button>
@@ -39,7 +39,7 @@
 
     <div class="list card">
       <div class="item item-divider">用户名</div>
-      <div class="item item-body">
+      <div class="item item-body text-wrapper selectable">
         <div>
           {{profile.username}}
         </div>
@@ -48,7 +48,7 @@
 
     <div class="list card">
       <div class="item item-divider">积分</div>
-      <div class="item item-body">
+      <div class="item item-body text-wrapper selectable">
         <div>
           {{profile.score}}
         </div>
@@ -56,18 +56,16 @@
     </div>
 
     <span ng-if="$root.currentUser._id != profile._id">
-      <div class="list card">
+      <div class="card">
         <div class="item item-divider">自我介绍</div>
-        <div class="item item-body">
-          <div>
-            {{profile.intro}}
-          </div>
+        <div class="item selectable">
+          <pre>{{profile.intro}}</pre>
         </div>
       </div>
 
       <div class="list card">
         <div class="item item-divider">爱好</div>
-        <div class="item item-body">
+        <div class="item item-body selectable">
           <div>
             {{profile.topic}}
           </div>
@@ -76,12 +74,51 @@
 
       <div class="list card">
         <div class="item item-divider">聊天目的</div>
-        <div class="item item-body">
+        <div class="item item-body selectable">
           <div>
             {{profile.goal}}
           </div>
         </div>
       </div>
     </span>
+
+    <span ng-if="$root.currentUser._id == profile._id">
+      <div class="card">
+        <div class="item item-divider">自我介绍(点击修改，回车保存)</div>
+        <div class="item selectable">
+          <textarea type="text" placeholder="自我介绍" class="review" ng-model="myProfile.intro"
+            on-blur="updateMyProfile()" on-return="updateMyProfile()"
+            ng-keyup="autoExpand($event)"></textarea> 
+        </div>
+      </div>
+
+      <div class="list card">
+        <div class="item item-divider">爱好(点击修改，回车保存)</div>
+        <div class="item item-body selectable">
+          <textarea type="text" placeholder="爱好" class="review" ng-model="myProfile.topic"
+            on-blur="updateMyProfile()" on-return="updateMyProfile()"
+            ng-keyup="autoExpand($event)"></textarea> 
+        </div>
+      </div>
+
+      <div class="list card">
+        <div class="item item-divider">聊天目的(点击修改，回车保存)</div>
+        <div class="item item-body selectable">
+          <textarea type="text" placeholder="爱好" class="review" ng-model="myProfile.goal"
+            on-blur="updateMyProfile()" on-return="updateMyProfile()" ng-keyup="autoExpand($event)"></textarea> 
+        </div>
+      </div>
+    </span>
+
+    <div ng-repeat="review in currentReviews">
+      <div class="list card">
+        <div class="item item-divider">{{review.reviewerName}}对{{profile.username}}的评价</div>
+        <div class="item item-body selectable">
+          <div>
+            <pre>({{review.rate}}星）{{review.detail}} </pre>
+          </div>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
