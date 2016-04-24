@@ -1,13 +1,20 @@
 <ion-view cache-view = "false">
   <ion-nav-title> {{profile.username}} </ion-nav-title>
-<!--   <ion-nav-buttons side = "left">
-    <ion-nav-back-button ng-click="myGoBack()" ng-controller="myGoBack()"> 
-    </ion-nav-back-button>
-  </ion-nav-buttons> -->
   <ion-content class="profile">
     <span ng-if="$root.currentUser._id == profile._id">
       <div class="padding text-center">
         <button ng-click="profile.logout()" class="button button-clear button-assertive">登出</button>
+      </div>
+    </span>  
+
+    <span ng-if="$root.currentUser._id != profile._id">
+
+      <div class="list card">
+        <div class="item item-divider">我对{{profile.username}}的评价</div>
+        <div class="item item-body">
+          <rating ng-model="rating.rate" max="rating.max"></rating>
+          <input type="text" placeholder="我对{{profile.username}}的评价" ng-model="review.detail">
+        </div>
       </div>
     </span>  
 
@@ -30,9 +37,6 @@
     </div>
 
     <span ng-if="$root.currentUser._id != profile._id">
-
-      <rating ng-model="rating.rate" max="rating.max"></rating>
-
       <div class="list card">
         <div class="item item-divider">自我介绍</div>
         <div class="item item-body">
