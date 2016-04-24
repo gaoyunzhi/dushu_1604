@@ -7,6 +7,7 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   this.logout = logout;
   $scope.profile = {};
   $scope.needSaveRating = false;
+  $scope.changeRating = changeRating;
 
   Meteor.subscribe('users');
   Meteor.subscribe('reviews');
@@ -41,9 +42,19 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   }
 
   function changeRating() {
-    console.log("changeRating");
+    Meteor.call('changeRating', $scope.profile._id, $scope.rating);
     $scope.needSaveRating = false;
   }
+
+  $scope.autoExpand = function(e) {
+      var element = typeof e === 'object' ? e.target : document.getElementById(e);
+      var scrollHeight = element.scrollHeight;
+      if (element.textLength == 0) {
+        element.style.height = '40px';
+      } else {
+        element.style.height = scrollHeight + "px"; 
+      }   
+  };
 
   Tracker.autorun(function() {
     update();

@@ -11,8 +11,13 @@
     }    
 }
 
-input.review {
-    width: 100%;
+textarea.review {
+    width: 80%;
     padding-top: 10px;
     font-size: 17px;
+    display: inline;
+}
+
+.float-clear {
+  clear: both;
 }

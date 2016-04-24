@@ -22,13 +22,17 @@
       <div class="list card">
         <div class="item item-divider">我对{{profile.username}}的评价（点击修改，欢迎完善）</div>
         <div class="item item-body">
-          <rating ng-model="rating.rate" max=5 class="rating"></rating>
-          <input type="text" placeholder="再写几句我对{{profile.username}}的评价吧！" class="review" ng-model="rating.detail"
-          on-return="changeRating()"
-          on-blur="changeRating()" /> 
-          <span ng-if="needSaveRating">
-            <button ng-click="changeRating()" class="button button-clear button-positive">保存</button>
-          </span>
+          <div>
+            <rating ng-model="rating.rate" max=5 class="rating"></rating>
+          </div>
+          <div class="float-clear"></div>
+          <div>
+            <textarea type="text" placeholder="再写几句我对{{profile.username}}的评价吧！" class="review" ng-model="rating.detail"
+            on-blur="changeRating()" ng-keyup="autoExpand($event)"></textarea> 
+            <span ng-if="needSaveRating">
+              <button ng-click="changeRating()" class="button button-clear button-positive">保存</button>
+            </span>
+          </div>
         </div>
       </div>
     </span>  
