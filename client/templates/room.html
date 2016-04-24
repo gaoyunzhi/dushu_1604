@@ -1,5 +1,5 @@
 <ion-view view-title={{currentRoom.title}}>
-  <ion-content class="chat" delegate-handle="chatScroll" overflow-scroll="true">
+  <ion-content class="room" delegate-handle="roomScroll" overflow-scroll="true">
     <div class="message-list">
       <div ng-repeat="message in messages" ng-init="author=getAuthor(message);" class="message-wrapper">
         <div ng-if="message.text">
@@ -23,30 +23,30 @@
     </div>
   </ion-content>
   <div ng-if="$root.currentUser._id">
-    <ion-footer-bar keyboard-attach class="bar-stable footer-chat item-input-inset">
+    <ion-footer-bar keyboard-attach class="bar-stable footer-room item-input-inset">
       <label class="item-input-wrapper">
         <textarea
                 ng-keyup="autoExpand($event)"
-                ng-model="chat.message"
+                ng-model="room.message"
                 dir="auto"
                 type="text"
-                on-return="chat.sendMessage(); chat.closeKeyboard()"
-                on-focus="chat.inputUp()"
-                on-blur="chat.inputDown()"
+                on-return="room.sendMessage(); room.closeKeyboard()"
+                on-focus="room.inputUp()"
+                on-blur="room.inputDown()"
                 class="input">
         </textarea>        
       </label>
 
-      <span ng-if="chat.message.length > 0">
-        <button ng-click="chat.sendMessage()" class="button button-clear button-positive">发表</button>
+      <span ng-if="room.message.length > 0">
+        <button ng-click="room.sendMessage()" class="button button-clear button-positive">发表</button>
       </span>
     </ion-footer-bar>
   </div>
   <div ng-if="!$root.currentUser._id">
     <ion-footer-bar class="button-foot-bar">
-      <div class="chat-buttons">
-        <button class="button button-calm chat-sign-button" ng-click="gotoLogin()">登陆参与讨论</button>
-        <button class="button button-calm chat-register-button" ng-click="gotoRegister()">注册参与讨论</button>
+      <div class="room-buttons">
+        <button class="button button-calm room-sign-button" ng-click="gotoLogin()">登陆参与讨论</button>
+        <button class="button button-calm room-register-button" ng-click="gotoRegister()">注册参与讨论</button>
       </div>
     </ion-footer-bar>   
   </div>  

@@ -31,20 +31,17 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
 
   update = function() {
-    console.log("here1");
-    if (!$scope.currentRoom || !$scope.currentRoom.id) {
+    if (!$scope.currentRoom || !$scope.currentRoom._id) {
       findRoom();
     }
-    console.log("here1.5", $scope.currentRoom);
-    if (!$scope.currentRoom || !$scope.currentRoom.id) {
+    if (!$scope.currentRoom || !$scope.currentRoom._id) {
       return;
     }
-    console.log("here2");
-    $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom.id}); // update room
-    console.log("here3", $scope.currentRoom);
+    $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
     if (!(Meteor.userId() in $scope.currentRoom.users)) {
       $scope.rightUserId = $scope.currentRoom.users[0];
     }
+    console.log("all message", Messages.find({}).fetch());
     var messages = Messages.find({room: $scope.currentRoom._id}).fetch();
     messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
     $scope.messages = messages;
@@ -71,7 +68,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
 
   function sendMessage() {
-    if (_.isEmpty(this.message) || $scope.currentRoom._id) return;
+    if (_.isEmpty(this.message) || !$scope.currentRoom._id) return;
  
     Meteor.call('newMessage', this.message, $scope.currentRoom._id);
  

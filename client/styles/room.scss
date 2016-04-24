@@ -6,8 +6,8 @@
   border-radius: 50%;
 }
 
-.chat {
-  background-image: url(/chat-background.jpg);
+.room {
+  background-image: url(/room-background.jpg);
   background-color: #E0DAD6;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -117,7 +117,7 @@
   }
 }
 
-.footer-chat {
+.footer-room {
   height: auto;
   .item-input-wrapper {
     background-color: #FFF;
@@ -141,7 +141,7 @@
   }
 }
 .button-foot-bar {
-  .chat-buttons {
+  .room-buttons {
     float: right;
   }
 }
