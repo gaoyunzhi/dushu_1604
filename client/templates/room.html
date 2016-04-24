@@ -1,4 +1,13 @@
-<ion-view view-title={{currentRoom.title}}>
+<ion-view>
+  <ion-nav-title>
+    <span ng-if="$root.currentUser._id != currentRoom.creater">
+      {{currentRoom.title}}
+    </span>
+    <span ng-if="$root.currentUser._id == currentRoom.creater">
+      <input type="text" placeholder="更改房间名" ng-model="newTitle" class="title-input" onReturn="updateTitle()"
+      onBlur="updateTitle()" />
+    </span>
+  </ion-nav-title>
   <ion-content class="room" delegate-handle="roomScroll" overflow-scroll="true">
     <div class="message-list">
       <div ng-repeat="message in currentMessages" class="message-wrapper">

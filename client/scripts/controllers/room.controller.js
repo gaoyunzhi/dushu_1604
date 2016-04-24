@@ -32,10 +32,13 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return;
     }
     $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
+    if (!this.newTitle) {
+      this.newTitle = $scope.currentRoom.title;
+      console.log(this.newTitle);
+    }
     if (!(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
       $scope.rightUserId = $scope.currentRoom.users[0];
     }
-    // console.log("all message", Messages.find({}).fetch());
     var messages = Messages.find({room: $scope.currentRoom._id}).fetch();
     messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
     $scope.currentMessages = messages.map(message => {
@@ -120,6 +123,19 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
 
   $scope.gotoRegister = function() {
     $state.go('register');
+  }
+
+  updateTitle = function() {
+    console.log("updateTitle", this.newTitle);
+  }
+
+  onTitleKeyPress = function(e) {
+    console.log('here');
+    if (!e) e = window.event;
+    var keyCode = e.keyCode || e.which;
+    if (keyCode == '13'){
+      updateTitle(e);
+    }
   }
 
   Tracker.autorun(function() {

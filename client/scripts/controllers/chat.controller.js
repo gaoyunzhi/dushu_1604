@@ -95,7 +95,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     }
     return [4, 0];
   }
-
+  
   Tracker.autorun(function() {
     updateChats();
   });

@@ -6,6 +6,12 @@
   border-radius: 50%;
 }
 
+input.title-input {
+  margin: auto;
+  font-size: 14pt;
+  margin-top: 5px;
+}
+
 .room {
   background-image: url(/room-background.jpg);
   background-color: #E0DAD6;
@@ -17,7 +23,7 @@
   margin-top: 12px;
   padding-left: 5%;
   padding-right: 5%;
-  padding-top: 0;
+  padding-top: 10;
   padding-bottom: 80px;
 }
 
