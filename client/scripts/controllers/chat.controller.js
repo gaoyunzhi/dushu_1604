@@ -14,7 +14,6 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $scope.$meteorSubscribe('rooms').then(function() {updateChats();});
 
   updateChats = function() {
-    console.log("updateChats");
     var chats = [];
     var covered_user = new Set();
     Rooms.find({}).fetch().forEach(room => {
@@ -28,7 +27,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         subtitle: room.lastMessage,
         timestamp: room.lastUpdated,
         sortKey: layer,
-        href: "#/room?id=" + room._id,
+        href: "#/room/" + room._id + '/0',
         titleClass: Date.now() - room.lastUpdated < FIVE_MIN_MILLS ? 
           "title-online" : "",
       })
@@ -45,7 +44,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         title: user.username, 
         subtitle: user.intro,
         sortKey: layer,
-        href: "#/room?user_id=" + user._id,
+        href: "#/room/0/" + user._id,
         titleClass: user.status.online ? "title-online" : "",
       })
     })

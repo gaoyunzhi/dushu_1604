@@ -18,8 +18,7 @@ function config($stateProvider, $urlRouterProvider) {
       controller: 'ChatCtrl as chat'
     })
     .state('room', {
-      url: '/room',
-      params: {id: null, user_id: null},
+      url: '/room/:id/:user_id',
       templateUrl: 'client/templates/room.html',
       controller: 'RoomCtrl as room',
       resolve: {
@@ -46,8 +45,7 @@ function config($stateProvider, $urlRouterProvider) {
       controller: 'RegisterCtrl as register'
     })
     .state('profile', {
-      url: '/profile',
-      params: {id: null},
+      url: '/profile/:id',
       templateUrl: 'client/templates/profile.html',
       controller: 'ProfileCtrl as profile',
       resolve: {

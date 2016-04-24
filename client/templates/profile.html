@@ -1,5 +1,9 @@
-<ion-view title={{profile.username}}>
-
+<ion-view cache-view = "false">
+  <ion-nav-title> {{profile.username}} </ion-nav-title>
+<!--   <ion-nav-buttons side = "left">
+    <ion-nav-back-button ng-click="myGoBack()" ng-controller="myGoBack()"> 
+    </ion-nav-back-button>
+  </ion-nav-buttons> -->
   <ion-content class="profile">
     <span ng-if="$root.currentUser._id == profile._id">
       <div class="padding text-center">

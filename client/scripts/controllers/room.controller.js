@@ -7,8 +7,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $scope.currentRoom = {};
   $scope.data = {};
   $scope.rightUserId = Meteor.userId();
-  if (!_.isEmpty($location.search().user_id)) {
-    Meteor.call('createRoom', $location.search().user_id);
+  if (!_.isEmpty($stateParams.user_id) && $stateParams.user_id != '0') {
+    Meteor.call('createRoom', $stateParams.user_id);
   }
 
   Meteor.subscribe('rooms');
@@ -19,12 +19,12 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $scope.$meteorSubscribe('rooms').then(function() {update();});
 
   findRoom = function() {
-    if ($location.search().user_id && Meteor.userId()) {
-      var users = [$location.search().user_id, Meteor.userId()].sort();
+    if ($stateParams.user_id && Meteor.userId() && $stateParams.user_id != '0') {
+      var users = [$stateParams.user_id, Meteor.userId()].sort();
       $scope.currentRoom = Rooms.findOne({users});
     }
-    if ($location.search().id) {
-      $scope.currentRoom = Rooms.findOne({_id: $location.search().id});
+    if ($stateParams.id && $stateParams.id != '0') {
+      $scope.currentRoom = Rooms.findOne({_id: $stateParams.id});
     }
   }
 
@@ -51,7 +51,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       calculatedMessage.authorName = author && author.username;
       calculatedMessage.authorScore = author && author.score;
       calculatedMessage.profileHref = 
-        author && "#/profile?id=" + author._id;
+        author && "#/profile/" + author._id;
       return calculatedMessage;
     });
   }

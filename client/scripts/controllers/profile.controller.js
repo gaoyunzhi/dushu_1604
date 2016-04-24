@@ -5,6 +5,7 @@ angular
 function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
   this.logout = logout;
+  $scope.myGoBack = myGoBack;
   $scope.profile = {};
 
   Meteor.subscribe('users');
@@ -13,7 +14,7 @@ function ProfileCtrl($scope, $reactive, $stateParams, $ionicScrollDelegate, $tim
   $scope.$meteorSubscribe('reviews').then(function() {update();});
 
   update = function() {
-    $scope.profile = Meteor.users.findOne({_id: $location.search().id});
+    $scope.profile = Meteor.users.findOne({_id: $stateParams.id});
   };
 
   $scope.rating = {};
