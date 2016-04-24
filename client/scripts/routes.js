@@ -44,20 +44,6 @@ function config($stateProvider, $urlRouterProvider) {
       params: {email: null, password: null},
       templateUrl: 'client/templates/register.html',
       controller: 'RegisterCtrl as register'
-    })
-    .state('profile', {
-      url: '/profile',
-      params: {id: null},
-      templateUrl: 'client/templates/profile.html',
-      controller: 'ProfileCtrl as profile',
-      resolve: {
-        users() {
-          return Meteor.subscribe('users');
-        },
-        reviews() {
-          return Meteor.subscribe('reviews');
-        },
-      }  
     });
  
   $urlRouterProvider.otherwise('chat');

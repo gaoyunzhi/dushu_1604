@@ -1,8 +1,7 @@
 angular
   .module('Root', [
     'angular-meteor',
-    'ionic',
-    'ionic.rating'
+    'ionic'
   ]);
  
 if (Meteor.isCordova) {

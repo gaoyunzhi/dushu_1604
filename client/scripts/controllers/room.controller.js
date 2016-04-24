@@ -46,9 +46,6 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       var userId = message.author;
       var author = Meteor.users.findOne({_id: userId});
       calculatedMessage.authorName = author && author.username;
-      calculatedMessage.authorScore = author && author.score;
-      calculatedMessage.profileHref = 
-        author && "#/profile?id=" + author._id;
       return calculatedMessage;
     });
   }
