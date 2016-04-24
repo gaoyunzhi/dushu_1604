@@ -4,8 +4,8 @@
       {{currentRoom.title}}
     </span>
     <span ng-if="$root.currentUser._id == currentRoom.creater">
-      <input type="text" placeholder="更改房间名" ng-model="newTitle" class="title-input" onReturn="updateTitle()"
-      onBlur="updateTitle()" />
+      <input type="text" dir="auto" placeholder="更改房间名" ng-model="data.newTitle" class="title-input" on-return="updateTitle()"
+      on-blur="updateTitle()" />
     </span>
   </ion-nav-title>
   <ion-content class="room" delegate-handle="roomScroll" overflow-scroll="true">

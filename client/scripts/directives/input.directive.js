@@ -29,7 +29,6 @@ function input ($timeout) {
     });
  
     element.bind('blur', function (e) {
-      console.log("hereblur");
       if (!scope.onBlur) return;
  
       $timeout(function () {
@@ -38,15 +37,12 @@ function input ($timeout) {
     });
  
     element.bind('keydown', function (e) {
-      console.log("herekeydown", e.which);
       if (e.which != 13 || e.metaKey || e.shiftKey) return;
  
       if (scope.returnClose) {
         element[0].blur();
       }
-      console.log("herekeydown1", e.which);
       if (scope.onReturn) {
-        console.log("herekeydown2", scope);
         $timeout(function () {
           scope.onReturn();
         });

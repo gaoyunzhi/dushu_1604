@@ -5,6 +5,7 @@ angular
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
   $scope.currentRoom = {};
+  $scope.data = {};
   $scope.rightUserId = Meteor.userId();
   if (!_.isEmpty($location.search().user_id)) {
     Meteor.call('createRoom', $location.search().user_id);
@@ -32,9 +33,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return;
     }
     $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
-    if (!this.newTitle) {
-      this.newTitle = $scope.currentRoom.title;
-      console.log(this.newTitle);
+    if (!$scope.data.newTitle) {
+      $scope.data.newTitle = $scope.currentRoom.title;
     }
     if (!(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
       $scope.rightUserId = $scope.currentRoom.users[0];
@@ -125,17 +125,11 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     $state.go('register');
   }
 
-  updateTitle = function() {
-    console.log("updateTitle", this.newTitle);
-  }
-
-  onTitleKeyPress = function(e) {
-    console.log('here');
-    if (!e) e = window.event;
-    var keyCode = e.keyCode || e.which;
-    if (keyCode == '13'){
-      updateTitle(e);
+  $scope.updateTitle = function() {
+    if (!$scope.data.newTitle) {
+      return;
     }
+    Meteor.call('updateRoom', $scope.currentRoom._id, $scope.data.newTitle);
   }
 
   Tracker.autorun(function() {
