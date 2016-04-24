@@ -1,0 +1,86 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node',
+1 verbose cli   '/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'ionic-rating' ]
+2 info using npm@2.14.22
+3 info using node@v0.10.43
+4 verbose install initial load of /Users/yunzhi_gao/Google Drive/projects/dushu_1604/package.json
+5 verbose readDependencies loading dependencies from /Users/yunzhi_gao/Google Drive/projects/dushu_1604/package.json
+6 silly cache add args [ 'ionic-rating', null ]
+7 verbose cache add spec ionic-rating
+8 silly cache add parsed spec { raw: 'ionic-rating',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'ionic-rating',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: 'latest',
+8 silly cache add   type: 'tag' }
+9 silly addNamed ionic-rating@latest
+10 verbose addNamed "latest" is being treated as a dist-tag for ionic-rating
+11 info addNameTag [ 'ionic-rating', 'latest' ]
+12 silly mapToRegistry name ionic-rating
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry uri https://registry.npmjs.org/ionic-rating
+16 verbose addNameTag registry:https://registry.npmjs.org/ionic-rating not in flight; fetching
+17 verbose request uri https://registry.npmjs.org/ionic-rating
+18 verbose request no auth needed
+19 info attempt registry request try #1 at 10:13:39
+20 verbose request id 6ed2dbb3d4fb1f59
+21 http request GET https://registry.npmjs.org/ionic-rating
+22 http 404 https://registry.npmjs.org/ionic-rating
+23 verbose headers { 'content-type': 'application/json',
+23 verbose headers   'cache-control': 'max-age=0',
+23 verbose headers   'content-length': '2',
+23 verbose headers   'accept-ranges': 'bytes',
+23 verbose headers   date: 'Sun, 24 Apr 2016 17:12:51 GMT',
+23 verbose headers   via: '1.1 varnish',
+23 verbose headers   age: '0',
+23 verbose headers   connection: 'keep-alive',
+23 verbose headers   'x-served-by': 'cache-sjc3133-SJC',
+23 verbose headers   'x-cache': 'MISS',
+23 verbose headers   'x-cache-hits': '0',
+23 verbose headers   'x-timer': 'S1461517970.678125,VS0,VE350',
+23 verbose headers   vary: 'Accept-Encoding' }
+24 silly get cb [ 404,
+24 silly get   { 'content-type': 'application/json',
+24 silly get     'cache-control': 'max-age=0',
+24 silly get     'content-length': '2',
+24 silly get     'accept-ranges': 'bytes',
+24 silly get     date: 'Sun, 24 Apr 2016 17:12:51 GMT',
+24 silly get     via: '1.1 varnish',
+24 silly get     age: '0',
+24 silly get     connection: 'keep-alive',
+24 silly get     'x-served-by': 'cache-sjc3133-SJC',
+24 silly get     'x-cache': 'MISS',
+24 silly get     'x-cache-hits': '0',
+24 silly get     'x-timer': 'S1461517970.678125,VS0,VE350',
+24 silly get     vary: 'Accept-Encoding' } ]
+25 verbose stack Error: Registry returned 404 for GET on https://registry.npmjs.org/ionic-rating
+25 verbose stack     at makeError (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+25 verbose stack     at CachingRegistryClient.<anonymous> (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:242:14)
+25 verbose stack     at Request._callback (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+25 verbose stack     at Request.self.callback (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/request/request.js:199:22)
+25 verbose stack     at Request.emit (events.js:98:17)
+25 verbose stack     at Request.<anonymous> (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+25 verbose stack     at Request.emit (events.js:117:20)
+25 verbose stack     at IncomingMessage.<anonymous> (/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/lib/node_modules/npm/node_modules/request/request.js:963:12)
+25 verbose stack     at IncomingMessage.emit (events.js:117:20)
+25 verbose stack     at _stream_readable.js:944:16
+26 verbose statusCode 404
+27 verbose pkgid ionic-rating
+28 verbose cwd /Users/yunzhi_gao/Google Drive/projects/dushu_1604
+29 error Darwin 14.5.0
+30 error argv "node" "/Users/yunzhi_gao/.meteor/packages/meteor-tool/.1.3.2_4.lbyo5v++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/bin/npm" "install" "--save" "ionic-rating"
+31 error node v0.10.43
+32 error npm  v2.14.22
+33 error code E404
+34 error 404 Registry returned 404 for GET on https://registry.npmjs.org/ionic-rating
+34 error 404
+34 error 404 'ionic-rating' is not in the npm registry.
+34 error 404 You should bug the author to publish it (or use the name yourself!)
+34 error 404
+34 error 404 Note that you can also install from a
+34 error 404 tarball, folder, http url, or git url.
+35 verbose exit [ 1, true ]
