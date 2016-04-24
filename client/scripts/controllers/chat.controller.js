@@ -45,7 +45,8 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         subtitle: user.intro,
         sortKey: layer,
         href: "#/room/0/" + user._id,
-        titleClass: user.status.online ? "title-online" : "",
+        titleClass: (user.status && user.status.online) ?
+           "title-online" : "",
       })
     })
     chats.sort((c1, c2) => {
@@ -95,7 +96,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
 
   getLayerForUser = function(user) {
-    if (user.status.online && user.score > 0) {
+    if (user.status && user.status.online && user.score > 0) {
       return [3, -user.score];
     }
     return [4, 0];
