@@ -33,7 +33,6 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     }
     $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
     if (!(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
-      console.log("her222e");
       $scope.rightUserId = $scope.currentRoom.users[0];
     }
     // console.log("all message", Messages.find({}).fetch());

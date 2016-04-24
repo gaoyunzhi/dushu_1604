@@ -5,7 +5,7 @@
               ng-repeat="chat in chats"
               class="item-icon-right"
               href="{{chat.href}}">
-        <div class="chat-profile">
+        <div class="chat-profile {{chat.titleClass}}">
           <div ng-if="chat.title">
             {{chat.title.slice(0,2)}}
           </div>

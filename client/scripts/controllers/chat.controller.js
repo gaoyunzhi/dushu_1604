@@ -6,24 +6,12 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   FIVE_MIN_MILLS = 5 * 60 * 1000;
 
   $reactive(this).attach($scope);
-  $scope.raw_rooms = [];
-  $scope.raw_users = [];
   $scope.chats = [];
-  $scope.$meteorSubscribe('users').then(function() {
-      $scope.raw_users = Meteor.users.find({}).fetch();
-  });
-  $scope.$meteorSubscribe('rooms').then(function() {
-      $scope.raw_rooms = Rooms.find({}).fetch();
-  });
-
-  $scope.$watchCollection('raw_users', (newVal, oldVal) => {
-    updateChats();
-  });
 
   updateChats = function() {
     var chats = [];
     var covered_user = new Set();
-    $scope.raw_rooms.forEach(room => {
+    Rooms.find({}).fetch().forEach(room => {
       var layer = getLayerForRoom(room);
       var otherUserId = getTheOther(room);
       if (otherUserId) {
@@ -34,10 +22,12 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         subtitle: room.lastMessage,
         timestamp: room.lastUpdated,
         sortKey: layer,
-        href: "#/room?id=" + room._id
+        href: "#/room?id=" + room._id,
+        titleClass: Date.now() - room.lastUpdated < FIVE_MIN_MILLS ? 
+          "title-online" : "",
       })
     })
-    $scope.raw_users.forEach(user => {
+    Meteor.users.find({}).fetch().forEach(user => {
       if (covered_user.has(user._id)) {
         return;
       }
@@ -49,7 +39,8 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         title: user.username, 
         subtitle: user.intro,
         sortKey: layer,
-        href: "#/room?user_id=" + user._id
+        href: "#/room?user_id=" + user._id,
+        titleClass: user.status.online ? "title-online" : "",
       })
     })
     chats.sort((c1, c2) => {
@@ -66,6 +57,9 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
 
   getTheOther = function(room) {
     if (!room.users.size == 2) {
+      return;
+    }
+    if (!(new Set(room.users)).has(Meteor.userId())) {
       return;
     }
     return _.find(room.users, userId => {
@@ -101,4 +95,8 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     }
     return [4, 0];
   }
+
+  Tracker.autorun(function() {
+    updateChats();
+  });
 }
