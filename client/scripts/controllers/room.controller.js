@@ -5,21 +5,14 @@ angular
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
   $scope.currentRoom = {};
-  $scope.message = [];
   $scope.rightUserId = Meteor.userId();
   if (!_.isEmpty($location.search().user_id)) {
     Meteor.call('createRoom', $location.search().user_id);
   }
-  $scope.$meteorSubscribe('rooms').then(function() {
-    update();
-  });
-  $scope.$meteorSubscribe('messages').then(function() {
-    console.log("update messages");
-    update();
-  });
-  $scope.$meteorSubscribe('users').then(function() {
-    update();
-  });
+
+  Meteor.subscribe('rooms');
+  Meteor.subscribe('messages');
+  Meteor.subscribe('users');
 
   findRoom = function() {
     if ($location.search().user_id && Meteor.userId()) {
@@ -39,7 +32,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       return;
     }
     $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
-    if (!(Meteor.userId() in $scope.currentRoom.users)) {
+    if (!(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
+      console.log("her222e");
       $scope.rightUserId = $scope.currentRoom.users[0];
     }
     // console.log("all message", Messages.find({}).fetch());
@@ -75,7 +69,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     delete this.message;
   }
 
-  $scope.$watchCollection('messages', (newVal, oldVal) => {
+  $scope.$watchCollection('currentMessages', (newVal, oldVal) => {
     if (oldVal && newVal && oldVal.length && newVal.length) {
       if (oldVal[oldVal.length-1].timestamp == 
         newVal[newVal.length-1].timestamp) {
@@ -128,4 +122,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $scope.gotoRegister = function() {
     $state.go('register');
   }
+
+  Tracker.autorun(function() {
+    update();
+  });
 }
