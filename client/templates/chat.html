@@ -1,4 +1,4 @@
-<ion-view view-title="谈笑有鸿儒" cache-view = "false">
+<ion-view view-title="谈笑有鸿儒" cache-view ="false">
   <ion-content>
     <ion-list>
       <ion-item
@@ -10,7 +10,7 @@
             {{chat.title.slice(0,2)}}
           </div>
         </div>
-        <div class="chat-right">
+        <div class="chat-right {{chat.hasNewMessage ? 'hasNewMessage': ''}}">
           <h2>{{chat.title}}</h2>
           <p>{{chat.subtitle}}</p>
           <div ng-if="chat.timestamp">

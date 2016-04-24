@@ -1,7 +1,8 @@
 angular
   .module('Root')
   .controller('RoomCtrl', RoomCtrl);
- 
+
+
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
   $scope.currentRoom = {};
@@ -57,6 +58,10 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         author && "#/profile/" + author._id;
       return calculatedMessage;
     });
+    if ($scope.currentMessages.length >= 1) {
+      Session.set['lastseen' + $scope.currentRoom._id] = 
+        $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
+    }
   }
   
   $scope.getMessageClass = function(message) {

@@ -3,6 +3,7 @@ angular
   .controller('ChatCtrl', ChatCtrl);
  
 function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
+
   FIVE_MIN_MILLS = 5 * 60 * 1000;
 
   $reactive(this).attach($scope);
@@ -17,7 +18,6 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     var chats = [];
     var covered_user = new Set();
     Rooms.find({}).fetch().forEach(room => {
-      var layer = getLayerForRoom(room);
       var otherUserId = getTheOther(room);
       if (otherUserId) {
         covered_user.add(otherUserId);
@@ -26,7 +26,8 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         title: room.title, 
         subtitle: room.lastMessage,
         timestamp: room.lastUpdated,
-        sortKey: layer,
+        sortKey: getLayerForRoom(room),
+        hasNewMessage: hasNewMessage(room),
         href: "#/room/" + room._id + '/0',
         titleClass: Date.now() - room.lastUpdated < FIVE_MIN_MILLS ? 
           "title-online" : "",
@@ -73,6 +74,13 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         return userId;
       }
     })
+  }
+
+  hasNewMessage = function(room) {
+    if (!Meteor.user() || !(new Set(room.users)).has(Meteor.user()._id)) {
+      return false;
+    }
+    return (Session.set['lastseen' + room._id] || 0) < room.lastUpdated;
   }
 
   getLayerForRoom = function(room) {
