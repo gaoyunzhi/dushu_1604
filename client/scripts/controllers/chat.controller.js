@@ -24,7 +24,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     var chats = [];
     var covered_user = new Set();
     $scope.raw_rooms.forEach(room => {
-      var layer = getLayerForRoom(room, covered_user);
+      var layer = getLayerForRoom(room);
       var otherUserId = getTheOther(room);
       if (otherUserId) {
         covered_user.add(otherUserId);
@@ -38,7 +38,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       })
     })
     $scope.raw_users.forEach(user => {
-      if (user._id in covered_user) {
+      if (covered_user.has(user._id)) {
         return;
       }
       if (Meteor.user() && user._id == Meteor.user()._id) {
@@ -68,7 +68,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     if (!room.users.size == 2) {
       return;
     }
-    room.users.forEach(userId => {
+    return _.find(room.users, userId => {
       if (Meteor.user() && userId != Meteor.user()._id) {
         return userId;
       }
@@ -78,14 +78,14 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   getLayerForRoom = function(room) {
     if (Meteor.user() && Meteor.user()._id in room.users &&
       Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
-      user = Meteor.users.find({_id: room.lastUpdatedUser});
+      user = Meteor.users.findOne({_id: room.lastUpdatedUser});
       if (user && user.score > 0) {
         return [1, -room.lastUpdated];
       }
     }
     if (Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
       var allPositiveRating = room.users.every(userId => {
-        user = Meteor.users.find({_id: userId});
+        user = Meteor.users.findOne({_id: userId});
         return user && user.score > 0;
       });
       if (allPositiveRating) {

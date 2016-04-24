@@ -1,4 +1,4 @@
-<ion-view view-title={{room.title}}>
+<ion-view view-title={{currentRoom.title}}>
   <ion-content class="chat" delegate-handle="chatScroll" overflow-scroll="true">
     <div class="message-list">
       <div ng-repeat="message in messages" ng-init="author=getAuthor(message);" class="message-wrapper">
