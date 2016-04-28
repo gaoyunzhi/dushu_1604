@@ -5,6 +5,7 @@ angular
 
 function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
   $reactive(this).attach($scope);
+  $scope.update = function() {};
   $scope.currentRoom = {};
   $scope.data = {};
   $scope.rightUserId = Meteor.userId();
@@ -15,9 +16,16 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   Meteor.subscribe('rooms');
   Meteor.subscribe('messages');
   Meteor.subscribe('users');
-  $scope.$meteorSubscribe('users').then(function() {update();});
-  $scope.$meteorSubscribe('messages').then(function() {update();});
-  $scope.$meteorSubscribe('rooms').then(function() {update();});
+  $scope.$meteorSubscribe('users').then(function() {$scope.update();});
+  $scope.$meteorSubscribe('messages').then(function() {$scope.update();});
+  $scope.$meteorSubscribe('rooms').then(function() {$scope.update();});
+
+  this.helpers({
+      currentMessagesInHelper() {
+        console.log("currentMessagesInHelper", Session.get('currentMessagesInHelper') || []);
+        return Session.get('currentMessagesInHelper') || [];
+      },
+  });
 
   findRoom = function() {
     if ($stateParams.user_id && Meteor.userId() && $stateParams.user_id != '0') {
@@ -29,7 +37,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     }
   }
 
-  update = function() {
+  $scope.update = function() {
     if (!$scope.currentRoom || !$scope.currentRoom._id) {
       findRoom();
     }
@@ -62,6 +70,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       Session.set['lastseen' + $scope.currentRoom._id] = 
         $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
     }
+    Session.set('currentMessagesInHelper', $scope.currentMessages);
+    // console.log($scope.currentMessages);
   }
   
   $scope.getMessageClass = function(message) {
@@ -147,8 +157,9 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
 
   Tracker.autorun(function() {
-    update();
+    $scope.update();
   });
 
-  update();
+  setInterval($scope.update,1000);
+  $scope.update();
 }

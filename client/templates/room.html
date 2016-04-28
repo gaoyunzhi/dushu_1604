@@ -15,7 +15,7 @@
   </ion-nav-title>
   <ion-content class="room" delegate-handle="roomScroll" overflow-scroll="true">
     <div class="message-list">
-      <div ng-repeat="message in currentMessages" class="message-wrapper">
+      <div ng-repeat="message in room.currentMessagesInHelper" class="message-wrapper">
         <div ng-if="message.text">
           <div class="message" ng-class="getMessageClass(message)">
             <a href={{message.profileHref}}>

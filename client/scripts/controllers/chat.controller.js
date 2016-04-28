@@ -50,7 +50,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
            "title-online" : "",
       })
     })
-    chats.sort((c1, c2) => {
+    $scope.chats = chats.sort((c1, c2) => {
       if (c1.sortKey < c2.sortKey) {
         return -1;
       }
@@ -59,7 +59,6 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       }
       return 0;
     });
-    $scope.chats = chats;
   };
 
   getTheOther = function(room) {
@@ -88,7 +87,7 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
       user = Meteor.users.findOne({_id: room.lastUpdatedUser});
       if (user && user.score > 0) {
-        return [1, -room.lastUpdated];
+        return (1, -room.lastUpdated);
       }
     }
     if (Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
@@ -97,17 +96,22 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         return user && user.score > 0;
       });
       if (allPositiveRating) {
-        return [2, -room.lastUpdated];
+        return (2, -room.lastUpdated);
       }
     }
-    return [4, 0]; // we can always inprove later
+    return (3, -room.lastUpdated); 
   }
 
   getLayerForUser = function(user) {
-    if (user.status && user.status.online && user.score > 0) {
-      return [3, -user.score];
+    var user_last_seen = 0;
+    // console.log(user.status);
+    if (user.status && user.status.lastActivity) {
+      user_last_seen = user.status.lastActivity
+    } else if (user.status && user.status.lastLogin 
+        && user.status.lastLogin.date) {
+      user_last_seen = user.status.lastLogin.date;
     }
-    return [4, 0];
+    return (user.score > 0 ? 2 : 3, -user_last_seen);
   }
   
   Tracker.autorun(function() {
