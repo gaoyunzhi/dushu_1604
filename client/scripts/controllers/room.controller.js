@@ -2,58 +2,27 @@ angular
   .module('Root')
   .controller('RoomCtrl', RoomCtrl);
 
-
-function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $ionicPopup, $log, $state, $location) {
-  $reactive(this).attach($scope);
-  $scope.update = function() {};
-  $scope.currentRoom = {};
-  $scope.data = {};
-  $scope.rightUserId = Meteor.userId();
+function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeout, $state) {
+  $reactive(this).attach($scope); // need this for helpers to work
   if (!_.isEmpty($stateParams.user_id) && $stateParams.user_id != '0') {
     Meteor.call('createRoom', $stateParams.user_id);
-  }
+  } // create room when not exist, this is async
+  $scope.currentRoom = {};
+  $scope.input = {};
+  $scope.rightUserId = Meteor.userId();
 
-  Meteor.subscribe('rooms');
-  Meteor.subscribe('messages');
-  Meteor.subscribe('users');
-  $scope.$meteorSubscribe('users').then(function() {$scope.update();});
-  $scope.$meteorSubscribe('messages').then(function() {$scope.update();});
-  $scope.$meteorSubscribe('rooms').then(function() {$scope.update();});
+  $scope.generateRoomQuery = function(stateParams) {
+    if (stateParams.user_id && Meteor.userId() && stateParams.user_id != '0') {
+      return {users: [stateParams.user_id, Meteor.userId()].sort()};
+    }
+    if (stateParams.id && stateParams.id != '0') {
+      return {_id: stateParams.id};
+    }
+  };
 
-  this.helpers({
-      currentMessagesInHelper() {
-        console.log("currentMessagesInHelper", Session.get('currentMessagesInHelper') || []);
-        return Session.get('currentMessagesInHelper') || [];
-      },
-  });
-
-  findRoom = function() {
-    if ($stateParams.user_id && Meteor.userId() && $stateParams.user_id != '0') {
-      var users = [$stateParams.user_id, Meteor.userId()].sort();
-      $scope.currentRoom = Rooms.findOne({users});
-    }
-    if ($stateParams.id && $stateParams.id != '0') {
-      $scope.currentRoom = Rooms.findOne({_id: $stateParams.id});
-    }
-  }
-
-  $scope.update = function() {
-    if (!$scope.currentRoom || !$scope.currentRoom._id) {
-      findRoom();
-    }
-    if (!$scope.currentRoom || !$scope.currentRoom._id) {
-      return;
-    }
-    $scope.currentRoom = Rooms.findOne({_id: $scope.currentRoom._id}); // update room
-    if (!$scope.data.newTitle) {
-      $scope.data.newTitle = $scope.currentRoom.title;
-    }
-    if (!(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
-      $scope.rightUserId = $scope.currentRoom.users[0];
-    }
-    var messages = Messages.find({room: $scope.currentRoom._id}).fetch();
+  $scope.getCurrentMessages = function(messages) {
     messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
-    $scope.currentMessages = messages.map(message => {
+    return messages.map(message => {
       var calculatedMessage = _.clone(message);
       var userId = message.author;
       var author = Meteor.users.findOne({_id: userId});
@@ -66,14 +35,25 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         author && "#/profile/" + author._id;
       return calculatedMessage;
     });
-    if ($scope.currentMessages.length >= 1) {
-      Session.set['lastseen' + $scope.currentRoom._id] = 
-        $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
-    }
-    Session.set('currentMessagesInHelper', $scope.currentMessages);
-    // console.log($scope.currentMessages);
   }
-  
+
+  this.helpers({
+    currentRoomInHelper() {
+      var roomQuery = $scope.generateRoomQuery($stateParams);
+      $scope.currentRoom = Rooms.findOne(roomQuery) || {};
+      return Rooms.findOne(roomQuery) || {};
+    },
+
+    currentMessagesInHelper() {
+      var roomQuery = $scope.generateRoomQuery($stateParams);
+      var room = Rooms.findOne(roomQuery) || {};
+      if (_.isEmpty(room)) { return []; }
+      var messages = Messages.find({room: room._id}).fetch();
+      $scope.currentMessages = $scope.getCurrentMessages(messages, room);
+      return $scope.getCurrentMessages(messages, room);
+    },
+  });
+
   $scope.getMessageClass = function(message) {
     if (message.author == $scope.rightUserId) {
       return 'message-right';
@@ -81,19 +61,12 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     return 'message-left';
   }
 
-  let isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-  this.sendMessage = sendMessage
-  this.inputUp = inputUp;
-  this.inputDown = inputDown;
-  this.closeKeyboard = closeKeyboard;
-
-  function sendMessage() {
-    if (_.isEmpty(this.message) || !$scope.currentRoom._id) return;
-    
-    Meteor.call('newMessage', this.message, $scope.currentRoom._id);
+  $scope.sendMessage = function() {
+    if (_.isEmpty($scope.input.newMessage) || !$scope.currentRoom._id) return;
+    Meteor.call('newMessage', $scope.input.newMessage, $scope.currentRoom._id);
     $scope.rightUserId = Meteor.userId(); // put my message on the right side.
-    delete this.message;
-  }
+    delete $scope.input.newMessage;
+  };
 
   $scope.$watchCollection('currentMessages', (newVal, oldVal) => {
     if (oldVal && newVal && oldVal.length && newVal.length) {
@@ -114,31 +87,15 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
         element.style.height = scrollHeight + "px"; 
       }   
   };
-  
-  function expand() {
-    $scope.autoExpand('TextArea');
-  }
 
-  function inputUp () {
-    if (isIOS) {
-      this.keyboardHeight = 216;
-    }
- 
+  $scope.inputUp = function() {
     $timeout(function() {
       $ionicScrollDelegate.$getByHandle('roomScroll').scrollBottom(true);
-    }, 300);
-  }
+    }, 100);
+  };
  
-  function inputDown () {
-    if (isIOS) {
-      this.keyboardHeight = 0;
-    }
- 
+  $scope.inputDown = function () {
     $ionicScrollDelegate.$getByHandle('roomScroll').resize();
-  }
- 
-  function closeKeyboard () {
-    // cordova.plugins.Keyboard.close();
   }
 
   $scope.gotoLogin = function() {
@@ -150,16 +107,42 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   }
 
   $scope.updateTitle = function() {
-    if (!$scope.data.newTitle) {
+    if (!$scope.input.newTitle) {
       return;
     }
-    Meteor.call('updateRoom', $scope.currentRoom._id, $scope.data.newTitle);
+    Meteor.call('updateRoom', $scope.currentRoom._id, $scope.input.newTitle);
+  }
+
+  // when render and rerender, scroll to the bottom
+  Tracker.afterFlush(function () {
+    $ionicScrollDelegate.$getByHandle('roomScroll').scrollBottom(true);
+  });
+
+  $scope.updateRightUserId = function() {
+    if ($scope.currentRoom && $scope.currentRoom.users &&
+      !(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
+      $scope.rightUserId = $scope.currentRoom.users[0];
+    }
+  };
+  
+  $scope.updateLastSeen = function() {
+    if ($scope.currentMessages && $scope.currentMessages.length >= 1 &&
+      $scope.currentRoom) {
+      Session.set['lastseen' + $scope.currentRoom._id] = 
+        $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
+      console.log("updateLastSeen", $scope.currentRoom.title);
+    }
+  };
+
+  $scope.fillInTitle = function() {
+    if (!$scope.input.newTitle) {
+      $scope.input.newTitle = $scope.currentRoom && $scope.currentRoom.title;
+    }
   }
 
   Tracker.autorun(function() {
-    $scope.update();
+    $scope.updateRightUserId();
+    $scope.updateLastSeen();
+    $scope.fillInTitle();
   });
-
-  setInterval($scope.update,1000);
-  $scope.update();
 }

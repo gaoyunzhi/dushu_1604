@@ -5,11 +5,11 @@
     </a>
   </ion-nav-buttons>
   <ion-nav-title>
-    <span ng-if="$root.currentUser._id != currentRoom.creater">
-      {{currentRoom.title}} 
+    <span ng-if="$root.currentUser._id != room.currentRoomInHelper.creater">
+      {{room.currentRoomInHelper.title}} 
     </span>
-    <span ng-if="$root.currentUser._id == currentRoom.creater">
-      <input type="text" dir="auto" placeholder="更改房间名" ng-model="data.newTitle" class="title-input" on-return="updateTitle()"
+    <span ng-if="$root.currentUser._id == room.currentRoomInHelper.creater">
+      <input type="text" dir="auto" placeholder="更改房间名" ng-model="input.newTitle" class="title-input" on-return="updateTitle()"
       on-blur="updateTitle()" />
     </span>
   </ion-nav-title>
@@ -41,18 +41,18 @@
       <label class="item-input-wrapper">
         <textarea
                 ng-keyup="autoExpand($event)"
-                ng-model="room.message"
+                ng-model="input.newMessage"
                 dir="auto"
                 type="text"
-                on-return="room.sendMessage(); room.closeKeyboard()"
-                on-focus="room.inputUp()"
-                on-blur="room.inputDown()"
+                on-return="sendMessage()"
+                on-focus="inputUp()"
+                on-blur="inputDown()"
                 class="input">
         </textarea>        
       </label>
 
       <span ng-if="room.message.length > 0">
-        <button ng-click="room.sendMessage()" class="button button-clear button-positive">发表</button>
+        <button ng-click="sendMessage()" class="button button-clear button-positive">发表</button>
       </span>
     </ion-footer-bar>
   </div>
