@@ -18,7 +18,6 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   getLayerForRoom = function(room) {
     if (Meteor.user() && (new Set(room.users)).has(Meteor.user()._id) &&
       Date.now() - room.lastUpdated < FIVE_MIN_MILLS) {
-      console.log(room.title, "layer1 room");
       user = Meteor.users.findOne({_id: room.lastUpdatedUser});
       if (user && user.score > 0) {
         return [1, -room.lastUpdated];

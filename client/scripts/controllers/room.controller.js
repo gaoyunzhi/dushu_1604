@@ -11,6 +11,28 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   $scope.input = {};
   $scope.rightUserId = Meteor.userId();
 
+
+  $scope.updateRightUserId = function() {
+    if ($scope.currentRoom && $scope.currentRoom.users &&
+      !(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
+      $scope.rightUserId = $scope.currentRoom.users[0];
+    }
+  };
+  
+  $scope.updateLastSeen = function() {
+    if ($scope.currentMessages && $scope.currentMessages.length >= 1 &&
+      $scope.currentRoom) {
+      Session.set['lastseen' + $scope.currentRoom._id] = 
+        $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
+    }
+  };
+
+  $scope.fillInTitle = function() {
+    if (!$scope.input.newTitle) {
+      $scope.input.newTitle = $scope.currentRoom && $scope.currentRoom.title;
+    }
+  }
+
   $scope.generateRoomQuery = function(stateParams) {
     if (stateParams.user_id && Meteor.userId() && stateParams.user_id != '0') {
       return {users: [stateParams.user_id, Meteor.userId()].sort()};
@@ -41,6 +63,8 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
     currentRoomInHelper() {
       var roomQuery = $scope.generateRoomQuery($stateParams);
       $scope.currentRoom = Rooms.findOne(roomQuery) || {};
+      $scope.fillInTitle();
+      $scope.updateRightUserId();
       return Rooms.findOne(roomQuery) || {};
     },
 
@@ -50,6 +74,7 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       if (_.isEmpty(room)) { return []; }
       var messages = Messages.find({room: room._id}).fetch();
       $scope.currentMessages = $scope.getCurrentMessages(messages, room);
+      $scope.updateLastSeen();
       return $scope.getCurrentMessages(messages, room);
     },
   });
@@ -116,33 +141,5 @@ function RoomCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
   // when render and rerender, scroll to the bottom
   Tracker.afterFlush(function () {
     $ionicScrollDelegate.$getByHandle('roomScroll').scrollBottom(true);
-  });
-
-  $scope.updateRightUserId = function() {
-    if ($scope.currentRoom && $scope.currentRoom.users &&
-      !(new Set($scope.currentRoom.users)).has(Meteor.userId())) {
-      $scope.rightUserId = $scope.currentRoom.users[0];
-    }
-  };
-  
-  $scope.updateLastSeen = function() {
-    if ($scope.currentMessages && $scope.currentMessages.length >= 1 &&
-      $scope.currentRoom) {
-      Session.set['lastseen' + $scope.currentRoom._id] = 
-        $scope.currentMessages[$scope.currentMessages.length-1].timestamp;
-      console.log("updateLastSeen", $scope.currentRoom.title);
-    }
-  };
-
-  $scope.fillInTitle = function() {
-    if (!$scope.input.newTitle) {
-      $scope.input.newTitle = $scope.currentRoom && $scope.currentRoom.title;
-    }
-  }
-
-  Tracker.autorun(function() {
-    $scope.updateRightUserId();
-    $scope.updateLastSeen();
-    $scope.fillInTitle();
   });
 }
