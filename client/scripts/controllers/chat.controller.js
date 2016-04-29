@@ -51,13 +51,21 @@ function ChatCtrl ($scope, $reactive, $stateParams, $ionicScrollDelegate, $timeo
       -getUserLastSeen(user)];
   }
 
+  getSubtitle = function(room) {
+    var user = Meteor.users.findOne({_id: room.lastUpdatedUser}); 
+    if (!user || !user.username) {
+      return room.lastMessage;
+    }
+    return user.username + ': ' + room.lastMessage;
+  }
+
   this.helpers({
     chatsInHelper() {
       var chats = [];
       Rooms.find({}).fetch().forEach(room => {
         chats.push({
           title: room.title, 
-          subtitle: room.lastMessage,
+          subtitle: getSubtitle(room),
           timestamp: room.lastUpdated,
           sortKey: getLayerForRoom(room),
           hasNewMessage: hasNewMessage(room),
